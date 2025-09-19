@@ -36,11 +36,12 @@ struct GalleryView: View {
                     viewStore.send(.onAppear)
                 }
             }
-            .sheet(item: viewStore.binding(
-                get: { $0.selectedImage },
-                send: { .selectImage($0) }
-            )) { imageId in
-                if let item = viewStore.images.first(where: { $0.id == imageId }) {
+            .sheet(isPresented: viewStore.binding(
+                get: { $0.selectedImage != nil },
+                send: { _ in .selectImage(nil) }
+            )) {
+                if let selectedImageId = viewStore.selectedImage,
+                   let item = viewStore.images.first(where: { $0.id == selectedImageId }) {
                     GalleryDetailView(item: item)
                 }
             }

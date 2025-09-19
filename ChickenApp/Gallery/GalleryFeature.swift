@@ -25,15 +25,13 @@ struct GalleryFeature {
         case onAppear
     }
     
-    var body: some ReducerOf<Self> {
-        Reduce { state, action in
-            switch action {
-            case let .selectImage(imageId):
-                state.selectedImage = imageId
-                return .none
-            case .onAppear:
-                return .none
-            }
+    func reduce(into state: inout State, action: Action) -> Effect<Action> {
+        switch action {
+        case let .selectImage(imageId):
+            state.selectedImage = imageId
+            return .none
+        case .onAppear:
+            return .none
         }
     }
 }

@@ -1,11 +1,6 @@
-//
-//  FactsFeature.swift
-//  ChickenApp
-//
-//  Created by Yaroslav Golinskiy on 19/09/2025.
-//
 
 import ComposableArchitecture
+import SwiftUI
 
 @Reducer
 struct FactsFeature {
@@ -59,18 +54,16 @@ struct FactsFeature {
         case onAppear
     }
     
-    var body: some ReducerOf<Self> {
-        Reduce { state, action in
-            switch action {
-            case let .selectCategory(category):
-                state.selectedCategory = category
-                return .none
-            case let .searchTextChanged(text):
-                state.searchText = text
-                return .none
-            case .onAppear:
-                return .none
-            }
+    func reduce(into state: inout State, action: Action) -> Effect<Action> {
+        switch action {
+        case let .selectCategory(category):
+            state.selectedCategory = category
+            return .none
+        case let .searchTextChanged(text):
+            state.searchText = text
+            return .none
+        case .onAppear:
+            return .none
         }
     }
 }
@@ -99,10 +92,10 @@ enum FactCategory: String, CaseIterable {
     
     var color: Color {
         switch self {
-        case .behavior: return .blue
-        case .anatomy: return .red
-        case .intelligence: return .purple
-        case .history: return .green
+        case .behavior: return Theme.Palette.vibrantBlue
+        case .anatomy: return Theme.Palette.vibrantOrange
+        case .intelligence: return Theme.Palette.vibrantPurple
+        case .history: return Theme.Palette.vibrantGreen
         }
     }
 }

@@ -63,42 +63,40 @@ struct QuizFeature {
         case onAppear
     }
     
-    var body: some ReducerOf<Self> {
-        Reduce { state, action in
-            switch action {
-            case let .selectAnswer(index):
-                state.selectedAnswerIndex = index
-                state.showResult = true
-                
-                // Перевіряємо правильність відповіді
-                let currentQuestion = state.questions[state.currentQuestionIndex]
-                if index == currentQuestion.correctAnswerIndex {
-                    state.score += 1
-                }
-                
-                return .none
-                
-            case .nextQuestion:
-                if state.currentQuestionIndex < state.questions.count - 1 {
-                    state.currentQuestionIndex += 1
-                    state.selectedAnswerIndex = nil
-                    state.showResult = false
-                } else {
-                    state.quizCompleted = true
-                }
-                return .none
-                
-            case .restartQuiz:
-                state.currentQuestionIndex = 0
+    func reduce(into state: inout State, action: Action) -> Effect<Action> {
+        switch action {
+        case let .selectAnswer(index):
+            state.selectedAnswerIndex = index
+            state.showResult = true
+            
+            // Перевіряємо правильність відповіді
+            let currentQuestion = state.questions[state.currentQuestionIndex]
+            if index == currentQuestion.correctAnswerIndex {
+                state.score += 1
+            }
+            
+            return .none
+            
+        case .nextQuestion:
+            if state.currentQuestionIndex < state.questions.count - 1 {
+                state.currentQuestionIndex += 1
                 state.selectedAnswerIndex = nil
                 state.showResult = false
-                state.score = 0
-                state.quizCompleted = false
-                return .none
-                
-            case .onAppear:
-                return .none
+            } else {
+                state.quizCompleted = true
             }
+            return .none
+            
+        case .restartQuiz:
+            state.currentQuestionIndex = 0
+            state.selectedAnswerIndex = nil
+            state.showResult = false
+            state.score = 0
+            state.quizCompleted = false
+            return .none
+            
+        case .onAppear:
+            return .none
         }
     }
 }

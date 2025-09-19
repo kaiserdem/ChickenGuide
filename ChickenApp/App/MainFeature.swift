@@ -36,28 +36,23 @@ struct MainFeature {
         }
     }
     
-    var body: some ReducerOf<Self> {
-        Scope(state: \.home, action: \.home) {
-            HomeFeature()
-        }
-        Scope(state: \.gallery, action: \.gallery) {
-            GalleryFeature()
-        }
-        Scope(state: \.facts, action: \.facts) {
-            FactsFeature()
-        }
-        Scope(state: \.quiz, action: \.quiz) {
-            QuizFeature()
-        }
-        
-        Reduce { state, action in
-            switch action {
-            case let .selectTab(tab):
-                state.selectedTab = tab
-                return .none
-            case .home, .gallery, .facts, .quiz:
-                return .none
-            }
+    func reduce(into state: inout State, action: Action) -> Effect<Action> {
+        switch action {
+        case let .selectTab(tab):
+            state.selectedTab = tab
+            return .none
+        case let .home(homeAction):
+            return HomeFeature().reduce(into: &state.home, action: homeAction)
+                .map(Action.home)
+        case let .gallery(galleryAction):
+            return GalleryFeature().reduce(into: &state.gallery, action: galleryAction)
+                .map(Action.gallery)
+        case let .facts(factsAction):
+            return FactsFeature().reduce(into: &state.facts, action: factsAction)
+                .map(Action.facts)
+        case let .quiz(quizAction):
+            return QuizFeature().reduce(into: &state.quiz, action: quizAction)
+                .map(Action.quiz)
         }
     }
 }
