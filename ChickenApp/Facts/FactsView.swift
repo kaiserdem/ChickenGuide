@@ -1,9 +1,4 @@
-//
-//  FactsView.swift
-//  ChickenApp
-//
-//  Created by Yaroslav Golinskiy on 19/09/2025.
-//
+
 
 import SwiftUI
 import ComposableArchitecture
